@@ -20,9 +20,16 @@ def gen_polygons(worldfilepath):
             polygons.append(polygon)
     return polygons
 
+"""
+so the 'node' in this project is 'Point' and it contains X and Y values. When expanding each point, the order is always up, right, down, left
+the code should implement the pseudocode
+"""
+# can call BFS
+    # within BFS, call expanded to add expanded nodes to the queue? or something like that
+
 if __name__ == "__main__":
-    epolygons = gen_polygons('TestingGrid/world1_enclosures.txt')
-    tpolygons = gen_polygons('TestingGrid/world1_turfs.txt')
+    epolygons = gen_polygons('Search/TestingGrid/world1_enclosures.txt')
+    tpolygons = gen_polygons('Search/TestingGrid/world1_turfs.txt')
 
     source = Point(24,17)
     dest = Point(28,20)
@@ -49,6 +56,7 @@ if __name__ == "__main__":
             draw_green_line(ax, [polygon[i].x, polygon[(i+1)%len(polygon)].x], [polygon[i].y, polygon[(i+1)%len(polygon)].y])
 
     #### Here call your search to compute and collect res_path
+    
 
     res_path = [Point(24,17), Point(25,17), Point(26,17), Point(27,17),  
                 Point(28,17), Point(28,18), Point(28,19), Point(28,20)]

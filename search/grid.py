@@ -25,6 +25,7 @@ def draw_board():
     # turn off the axes
     ax.set_axis_off()
     return fig, ax
+
 def draw_grids(ax):
     # draw the vertical lines
     for x in range(MAX):
