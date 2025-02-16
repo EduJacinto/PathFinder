@@ -5,6 +5,7 @@ import matplotlib.animation as animation
 
 from utils import *
 from grid import *
+from SearchandExpand import *
 
 def gen_polygons(worldfilepath):
     polygons = []
