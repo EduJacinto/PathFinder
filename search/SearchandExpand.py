@@ -1,9 +1,14 @@
 from utils import *
 from grid import *
+import math
 
 """
 This file will hold all search functions and the point expansion function
 """
+def Summarize(algo, pathcost, expansions):
+    with open('summary.txt', 'a') as summary:
+        summary.write(f'{algo}:\nPath Cost; {pathcost}\nNodes Expanded: {expansions}\n')
+
 def point_on_segment(p, p1, p2, eps=1e-10):
    
     # Check for collinearity via the cross product.
@@ -17,6 +22,7 @@ def point_on_segment(p, p1, p2, eps=1e-10):
         return True
     
     return False
+
 
 def point_in_polygon(point, polygon):
     
@@ -45,6 +51,7 @@ def point_in_polygon(point, polygon):
 
     return inside
 
+
 def Valid_Move(node, enclosures):
 
     for polygon in enclosures:
@@ -53,6 +60,7 @@ def Valid_Move(node, enclosures):
             return False
         
     return True
+
 
 def Expand(point, enclosures):
     directions = [
@@ -70,20 +78,34 @@ def Expand(point, enclosures):
 
     return children
 
-def ActionCost(point, action, next_point):
-    pass
 
-def Breadth_First_Search(source, dest, enc):
-    if source == dest:
-        return [source]
+def InTurf(point, turfs):
+    for polygon in turfs:
+        if point_in_polygon(point, polygon):
+            return True
+        
+        return False
 
+
+def ActionCost(point, turfs):
+    if InTurf(point, turfs):
+        return 1.5
+    else:
+        return 1.0
+
+
+def BFS(source, dest, enc, turfs):
     frontier = Queue()
-    frontier.push((source, [source]))
+    frontier.push([source])
     visited = set( [source.to_tuple()] )
+    nodes_expanded = 0
+    path_cost = 0.0
 
     while frontier:
 
-        curr_point, path = frontier.pop()
+        path = frontier.pop()
+        curr_point = path[-1]
+        nodes_expanded += 1
 
         for child in Expand(curr_point, enc):
 
@@ -93,6 +115,11 @@ def Breadth_First_Search(source, dest, enc):
             new_path = path + [child]
 
             if child == dest:
+
+                for i in range(1, len(path)):
+                    path_cost += ActionCost(path[i], turfs)
+                Summarize('GreedyBFS', path_cost, nodes_expanded)
+
                 return new_path
             
             visited.add(child.to_tuple())
@@ -101,64 +128,106 @@ def Breadth_First_Search(source, dest, enc):
     return []
 
 
-def Depth_First_Search(source, dest, enc):
-    if source == dest:
-        return [source]
+def DFS(source, dest, enc, turfs):
     
     frontier = Stack()
-    frontier.push( (source, [source]) )
+    frontier.push([source])
     visited = set( [source.to_tuple()] )
+    nodes_expanded = 0
+    path_cost = 0.0
 
     while frontier:
-        curr_point, path = frontier.pop()
+        path = frontier.pop()
+        curr_point = path[-1]
+        nodes_expanded += 1
 
         if curr_point == dest:
+
+            for i in range(1, len(path)):
+                path_cost += ActionCost(path[i], turfs)
+            Summarize('DFS', path_cost, nodes_expanded)
+
             return path
         
         for child in Expand(curr_point, enc):
             
-            if child.to_tuple() in visited:
-                continue
-            
-            new_path = path + [child]
+            if child.to_tuple() not in visited:
+                
+                new_path = path + [child]
 
-            visited.add(child.to_tuple())
-            frontier.push( (child, new_path) )
+                visited.add( child.to_tuple() )
+                frontier.push( new_path )
     
     return []
 
 
-def GreedyBFS(source, dest, enc, turf):
-    if source == dest:
-        return [source]
+def heuristic(node, dest):
+    rx = node.x - dest.x
+    ry = node.y - dest.y
+    
+    return math.sqrt( rx*rx + ry*ry )
 
-    frontier = Queue()
-    frontier.push((source, [source]))
-    visited = set( [source.to_tuple()] )
-    path_cost = 0 # 
-    expanded_node = 0 # 
+
+def GreedyBFS(source, dest, enc, turfs):
+    frontier = PriorityQueue()
+    visited = set()
+    expansion_count = 0
+    path_cost = 0.0
+
+    frontier.push( [source], heuristic(source, dest) )
+    visited.add( source.to_tuple() )
 
     while frontier:
+        path = frontier.pop()
+        expansion_count += 1
+        current = path[-1]
 
-        curr_point, path = frontier.pop()
-        expanded_node += 1 # 
+        if current == dest:
+            for i in range(1, len(path)):
+                path_cost += ActionCost(path[i], turfs)
+            Summarize('GreedyBFS', path_cost, expansion_count)
+            return path
+        
+        for child in Expand(current, enc):
+            if child.to_tuple() not in visited:
 
-        for child in Expand(curr_point, enc):
-
-            if child.to_tuple() in visited:
-                continue
-
-            new_path = path + [child]
-
-            if child == dest:
-                for i in range(1, len(new_path)):
-                    path_cost += self.ActionCost()
-                return new_path
-            
-            visited.add(child.to_tuple())
-            frontier.push((child, new_path))
-    
+                visited.add(child.to_tuple())
+                new_path = path + [child]
+                heuristic_val = heuristic(child, dest)
+                frontier.push( new_path, heuristic_val )
     return []
 
-def A_Star(source, dest, enc, turf):
-    pass
+
+def A_Star(source, dest, enc, turfs):
+    frontier = PriorityQueue()
+    optimal_costs = {}
+    start_cost = 0.0
+    node_expansions = 0
+    path_cost = 0.0
+
+    frontier.push( ([source], start_cost), (start_cost + heuristic(source, dest)) )
+    optimal_costs[source.to_tuple()] = 0.0
+
+    while frontier:
+        (path, cost) = frontier.pop()
+        node_expansions += 1
+
+        current = path[-1]
+
+        if current == dest:
+            for i in range(1, len(path)):
+                path_cost += ActionCost(path[i], turfs)
+            
+            Summarize('A-Star', path_cost, node_expansions)
+            return path
+        
+        for child in Expand(current, enc):
+            coord = child.to_tuple()
+            next_price = ActionCost(child, turfs)
+            new_cost = cost + next_price
+
+            if coord not in optimal_costs or new_cost < optimal_costs[coord]:
+                optimal_costs[coord] = new_cost
+                new_path = path + [child]
+                f_val = new_cost + heuristic(child, dest)
+                frontier.push( (new_path, new_cost), f_val )

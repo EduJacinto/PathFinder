@@ -1,0 +1,6 @@
+GreedyBFS:
+Path Cost; 94.0
+Nodes Expanded: 103
+A-Star:
+Path Cost; 85.0
+Nodes Expanded: 2196

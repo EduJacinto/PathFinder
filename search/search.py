@@ -62,10 +62,8 @@ if __name__ == "__main__":
     # seems like the search is supposed to just collect points. The for loop at the end is drawing the line for the path.
     # the res_path var is a list that holds Point variables
 
-    res_path = Depth_First_Search(source, dest, epolygons)
+    res_path = DFS(source, dest, epolygons, tpolygons)
 
-    # res_path = [Point(24,17), Point(25,17), Point(26,17), Point(27,17),  
-    #             Point(28,17), Point(28,18), Point(28,19), Point(28,20)]
     
     for i in range(len(res_path)-1):
         draw_result_line(ax, [res_path[i].x, res_path[i+1].x], [res_path[i].y, res_path[i+1].y])
