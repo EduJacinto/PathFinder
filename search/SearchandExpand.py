@@ -70,11 +70,14 @@ def Expand(point, enclosures):
     children = []
 
     for d in directions:
+        
+        new_x, new_y = point.x + d.x, point.y + d.y
 
-        child = Point(point.x + d.x, point.y + d.y)
+        if 0 <= new_x < 50 and 0 <= new_y < 50:
+            child = Point(new_x, new_y)
 
-        if Valid_Move(child, enclosures):
-            children.append(child)
+            if Valid_Move(child, enclosures):
+                children.append(child)
 
     return children
 
@@ -82,9 +85,8 @@ def Expand(point, enclosures):
 def InTurf(point, turfs):
     for polygon in turfs:
         if point_in_polygon(point, polygon):
-            return True
-        
-        return False
+            return True  
+    return False
 
 
 def ActionCost(point, turfs):
@@ -96,34 +98,33 @@ def ActionCost(point, turfs):
 
 def BFS(source, dest, enc, turfs):
     frontier = Queue()
-    frontier.push([source])
-    visited = set( [source.to_tuple()] )
+    frontier.push((source, [source]))
+    visited = set( source.to_tuple() )
     nodes_expanded = 0
     path_cost = 0.0
 
     while frontier:
 
-        path = frontier.pop()
-        curr_point = path[-1]
+        curr_point, path = frontier.pop()
         nodes_expanded += 1
 
         for child in Expand(curr_point, enc):
 
-            if child.to_tuple() in visited:
-                continue
+            if child.to_tuple() not in visited:
 
-            new_path = path + [child]
+                new_path = path + [child]
 
-            if child == dest:
+                if child == dest:
 
-                for i in range(1, len(path)):
-                    path_cost += ActionCost(path[i], turfs)
-                Summarize('GreedyBFS', path_cost, nodes_expanded)
+                    for i in range(1, len(path)):
+                        path_cost += ActionCost(path[i], turfs)
+                    Summarize('BFS', path_cost, nodes_expanded)
 
-                return new_path
+                    return new_path
+                
+                visited.add(child.to_tuple())
+                frontier.push((child, new_path))
             
-            visited.add(child.to_tuple())
-            frontier.push((child, new_path))
     
     return []
 
@@ -131,14 +132,13 @@ def BFS(source, dest, enc, turfs):
 def DFS(source, dest, enc, turfs):
     
     frontier = Stack()
-    frontier.push([source])
-    visited = set( [source.to_tuple()] )
+    frontier.push( (source, [source]) )
+    visited = set( source.to_tuple() )
     nodes_expanded = 0
     path_cost = 0.0
 
     while frontier:
-        path = frontier.pop()
-        curr_point = path[-1]
+        curr_point, path = frontier.pop()
         nodes_expanded += 1
 
         if curr_point == dest:
@@ -156,7 +156,7 @@ def DFS(source, dest, enc, turfs):
                 new_path = path + [child]
 
                 visited.add( child.to_tuple() )
-                frontier.push( new_path )
+                frontier.push( (child, new_path) )
     
     return []
 

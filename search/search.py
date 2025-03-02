@@ -59,14 +59,50 @@ if __name__ == "__main__":
             draw_green_line(ax, [polygon[i].x, polygon[(i+1)%len(polygon)].x], [polygon[i].y, polygon[(i+1)%len(polygon)].y])
 
     #### Here call your search to compute and collect res_path
-    # seems like the search is supposed to just collect points. The for loop at the end is drawing the line for the path.
-    # the res_path var is a list that holds Point variables
+    print("Welcome to:")
+    print("_______  _______  _______  __   __\n"+                
+          "|       ||   _   ||       ||  | |  |\n" +                
+          "|    _  ||  |_|  ||_     _||  |_|  |\n" +                
+          "|   |_| ||       |  |   |  |       |\n" +                
+          "|    ___||       |  |   |  |       |\n" +                
+          "|   |    |   _   |  |   |  |   _   |\n" +                
+          "|___|    |__| |__|  |___|  |__| |__|\n" +                
+          " _______  ___   __    _  ______   _______  ______\n"    
+          "|       ||   | |  |  | ||      | |       ||    _ |\n" +  
+          "|    ___||   | |   |_| ||  _    ||    ___||   | ||\n" +  
+          "|   |___ |   | |       || | |   ||   |___ |   |_||_ \n" +
+          "|    ___||   | |  _    || |_|   ||    ___||    __  |\n" +
+          "|   |    |   | | | |   ||       ||   |___ |   |  | |\n" +
+          "|___|    |___| |_|  |__||______| |_______||___|  |_|\n")
 
-    res_path = DFS(source, dest, epolygons, tpolygons)
-
+    print("Please choose from the following menu of search methods\nto find the path the path\n")
+    print("Search Options:\n"+
+          "1) Breadth First Search\n" +
+          "2) Depth First Search\n" +
+          "3) Greedy Best First Search\n" +
+          "4) A-Star")
     
+    option = None
+    while option is None or option < 1 or option > 4:
+        try:
+            option = int(input())
+            if option < 1 or option > 4:
+                print("Invalid Option. You must input a number 1 - 4.")
+        except ValueError:
+            print("Invalid input. Please enter a number 1 - 4.")
+
+    if option == 1:
+        res_path = BFS(source, dest, epolygons, tpolygons)
+    elif option == 2:
+        res_path = DFS(source, dest, epolygons, tpolygons)
+    elif option == 3:
+        res_path = GreedyBFS(source, dest, epolygons, tpolygons)
+    elif option == 4:
+        res_path = A_Star(source, dest, epolygons, tpolygons)
+
     for i in range(len(res_path)-1):
         draw_result_line(ax, [res_path[i].x, res_path[i+1].x], [res_path[i].y, res_path[i+1].y])
         plt.pause(0.1)
     
     plt.show()
+    print("Congrats! Your agent found a path!")

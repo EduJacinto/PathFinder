@@ -4,3 +4,30 @@ Nodes Expanded: 103
 A-Star:
 Path Cost; 85.0
 Nodes Expanded: 2196
+A-Star:
+Path Cost; 85.0
+Nodes Expanded: 1796
+GreedyBFS:
+Path Cost; 2207.5
+Nodes Expanded: 2030
+BFS:
+Path Cost; 86.0
+Nodes Expanded: 2030
+DFS:
+Path Cost; 842.0
+Nodes Expanded: 1250
+DFS:
+Path Cost; 842.0
+Nodes Expanded: 1250
+DFS:
+Path Cost; 842.0
+Nodes Expanded: 1250
+A-Star:
+Path Cost; 85.0
+Nodes Expanded: 1796
+A-Star:
+Path Cost; 85.0
+Nodes Expanded: 1796
+GreedyBFS:
+Path Cost; 94.0
+Nodes Expanded: 103
