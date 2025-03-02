@@ -31,3 +31,48 @@ Nodes Expanded: 1796
 GreedyBFS:
 Path Cost; 94.0
 Nodes Expanded: 103
+A-Star:
+Path Cost; 85.0
+Nodes Expanded: 1796
+GreedyBFS:
+Path Cost; 94.0
+Nodes Expanded: 103
+BFS:
+Path Cost; 69.0
+Nodes Expanded: 2212
+A-Star:
+Path Cost; 70.0
+Nodes Expanded: 1646
+A-Star:
+Path Cost; 71.0
+Nodes Expanded: 1668
+A-Star:
+Path Cost; 70.0
+Nodes Expanded: 1643
+BFS:
+Path Cost; 73.0
+Nodes Expanded: 2284
+DFS:
+Path Cost; 904.5
+Nodes Expanded: 1382
+GreedyBFS:
+Path Cost; 70.5
+Nodes Expanded: 71
+A-Star:
+Path Cost; 70.0
+Nodes Expanded: 1643
+BFS:
+Path Cost; 73.0
+Nodes Expanded: 2284
+BFS:
+Path Cost; 69.0
+Nodes Expanded: 2218
+A-Star:
+Path Cost; 70.0
+Nodes Expanded: 1643
+BFS:
+Path Cost; 86.0
+Nodes Expanded: 2030
+GreedyBFS:
+Path Cost; 70.5
+Nodes Expanded: 71

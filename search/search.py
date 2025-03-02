@@ -28,9 +28,44 @@ the code should implement the pseudocode
 
 if __name__ == "__main__":
 
+    print("Welcome to:")
+    print(" _______  _______  _______  __   __\n"+                
+          "|       ||   _   ||       ||  | |  |\n" +                
+          "|    _  ||  |_|  ||_     _||  |_|  |\n" +                
+          "|   |_| ||       |  |   |  |       |\n" +                
+          "|    ___||       |  |   |  |       |\n" +                
+          "|   |    |   _   |  |   |  |   _   |\n" +                
+          "|___|    |__| |__|  |___|  |__| |__|\n" +                
+          " _______  ___   __    _  ______   _______  ______\n"    
+          "|       ||   | |  |  | ||      | |       ||    _ |\n" +  
+          "|    ___||   | |   |_| ||  _    ||    ___||   | ||\n" +  
+          "|   |___ |   | |       || | |   ||   |___ |   |_||_ \n" +
+          "|    ___||   | |  _    || |_|   ||    ___||    __  |\n" +
+          "|   |    |   | | | |   ||       ||   |___ |   |  | |\n" +
+          "|___|    |___| |_|  |__||______| |_______||___|  |_|\n")
+
+    world_option = None
+    print("Please choose which world you would like to traverse.\nWorld 1\nWorld 2\n")
+
+    while world_option is None or world_option not in (1,2):
+        try:
+            world_option = int(input())
+
+            if world_option not in (1,2):
+                print("Invalid Option. You must choose 1 or 2.")
+        except ValueError:
+            print("Invalid input. Please enter the number 1 or 2.")
+
     # reading enclosure and turf coordinate information
-    epolygons = gen_polygons('Search/TestingGrid/world1_enclosures.txt')
-    tpolygons = gen_polygons('Search/TestingGrid/world1_turfs.txt')
+    if world_option == 1:
+        epolygons = gen_polygons('Search/TestingGrid/world1_enclosures.txt')
+        tpolygons = gen_polygons('Search/TestingGrid/world1_turfs.txt')
+    elif world_option == 2:
+        epolygons = gen_polygons('Search/TestingGrid/world2_enclosures.txt')
+        tpolygons = gen_polygons('Search/TestingGrid/world2_turfs.txt')
+    else:
+        print("Invalid input")
+        exit()
 
     # set the start and end points
     source = Point(8,10)
@@ -59,23 +94,8 @@ if __name__ == "__main__":
             draw_green_line(ax, [polygon[i].x, polygon[(i+1)%len(polygon)].x], [polygon[i].y, polygon[(i+1)%len(polygon)].y])
 
     #### Here call your search to compute and collect res_path
-    print("Welcome to:")
-    print("_______  _______  _______  __   __\n"+                
-          "|       ||   _   ||       ||  | |  |\n" +                
-          "|    _  ||  |_|  ||_     _||  |_|  |\n" +                
-          "|   |_| ||       |  |   |  |       |\n" +                
-          "|    ___||       |  |   |  |       |\n" +                
-          "|   |    |   _   |  |   |  |   _   |\n" +                
-          "|___|    |__| |__|  |___|  |__| |__|\n" +                
-          " _______  ___   __    _  ______   _______  ______\n"    
-          "|       ||   | |  |  | ||      | |       ||    _ |\n" +  
-          "|    ___||   | |   |_| ||  _    ||    ___||   | ||\n" +  
-          "|   |___ |   | |       || | |   ||   |___ |   |_||_ \n" +
-          "|    ___||   | |  _    || |_|   ||    ___||    __  |\n" +
-          "|   |    |   | | | |   ||       ||   |___ |   |  | |\n" +
-          "|___|    |___| |_|  |__||______| |_______||___|  |_|\n")
 
-    print("Please choose from the following menu of search methods\nto find the path the path\n")
+    print("\nPlease choose from the following menu of search methods\nto find the path the path\n")
     print("Search Options:\n"+
           "1) Breadth First Search\n" +
           "2) Depth First Search\n" +
@@ -105,4 +125,3 @@ if __name__ == "__main__":
         plt.pause(0.1)
     
     plt.show()
-    print("Congrats! Your agent found a path!")
