@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import time
 import matplotlib.animation as animation
-
 from utils import *
 from grid import *
 from SearchandExpand import *
