@@ -187,6 +187,8 @@ def GreedyBFS(source, dest, enc, turfs):
     Greedy best firat search
     Pops nodes from the frontier with the minimum h(n) value and expands it
     adding valid children nodes to the frontier as well as their respective h(n) val.
+    This search algo does not take into account the cost, thus far, of the current path
+    it only cares about how small the heuristic value is.
     '''
     frontier = PriorityQueue()
     visited = set()
