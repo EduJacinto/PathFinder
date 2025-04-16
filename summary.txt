@@ -76,3 +76,6 @@ Nodes Expanded: 2030
 GreedyBFS:
 Path Cost; 70.5
 Nodes Expanded: 71
+GreedyBFS:
+Path Cost; 94.0
+Nodes Expanded: 103

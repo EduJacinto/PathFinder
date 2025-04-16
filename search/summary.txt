@@ -13,3 +13,19 @@ Nodes expanded: X
 astar1:
 Path cost: X
 Nodes expanded: X
+
+BFS:
+Path Cost; 86.0
+Nodes Expanded: 2030
+
+DFS:
+Path Cost; 842.0
+Nodes Expanded: 1250
+
+GreedyBFS:
+Path Cost; 94.0
+Nodes Expanded: 103
+
+A-Star:
+Path Cost; 85.0
+Nodes Expanded: 1796

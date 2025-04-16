@@ -93,7 +93,6 @@ if __name__ == "__main__":
         for i in range(0, len(polygon)):
             draw_green_line(ax, [polygon[i].x, polygon[(i+1)%len(polygon)].x], [polygon[i].y, polygon[(i+1)%len(polygon)].y])
 
-    #### Here call your search to compute and collect res_path
 
     print("\nPlease choose from the following menu of search methods\nto find the path the path\n")
     print("Search Options:\n"+

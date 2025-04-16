@@ -5,12 +5,21 @@ import math
 """
 This file will hold all search functions and the point expansion function
 """
+
+
 def Summarize(algo, pathcost, expansions):
+    '''
+    This function updates the summary.txt file. Appends information such as which search algorithm
+    was used and how many nodes were expanded during the search and the path cost.
+    '''
     with open('summary.txt', 'a') as summary:
-        summary.write(f'{algo}:\nPath Cost; {pathcost}\nNodes Expanded: {expansions}\n')
+        summary.write(f'\n{algo}:\nPath Cost: {pathcost}\nNodes Expanded: {expansions}\n')
+
 
 def point_on_segment(p, p1, p2, eps=1e-10):
-   
+    '''
+    Checks if current point is on polygon segment.
+    '''
     # Check for collinearity via the cross product.
     cross = (p.y - p1.y) * (p2.x - p1.x) - (p.x - p1.x) * (p2.y - p1.y)
     if abs(cross) > eps:
@@ -25,7 +34,9 @@ def point_on_segment(p, p1, p2, eps=1e-10):
 
 
 def point_in_polygon(point, polygon):
-    
+    '''
+    Checks if a point is currently located on/in a polygon
+    '''
     # First, if the point is on any edge, consider it inside.
     n = len(polygon)
     for i in range(n):
@@ -162,19 +173,27 @@ def DFS(source, dest, enc, turfs):
 
 
 def heuristic(node, dest):
+    '''
+    Find distance to destination from current node
+    '''
     rx = node.x - dest.x
     ry = node.y - dest.y
     
-    return math.sqrt( rx*rx + ry*ry )
+    return math.sqrt( rx*rx + ry*ry ) # returns hypotenus = sqrt(rx^2 + ry^2)
 
 
 def GreedyBFS(source, dest, enc, turfs):
+    '''
+    Greedy best firat search
+    Pops nodes from the frontier with the minimum h(n) value and expands it
+    adding valid children nodes to the frontier as well as their respective h(n) val.
+    '''
     frontier = PriorityQueue()
     visited = set()
     expansion_count = 0
     path_cost = 0.0
 
-    frontier.push( [source], heuristic(source, dest) )
+    frontier.push( [source], heuristic(source, dest) ) # frontier takes tuple( path, heuristic )
     visited.add( source.to_tuple() )
 
     while frontier:
@@ -188,7 +207,7 @@ def GreedyBFS(source, dest, enc, turfs):
             Summarize('GreedyBFS', path_cost, expansion_count)
             return path
         
-        for child in Expand(current, enc):
+        for child in Expand(current, enc): # expand the popped node and find valid children
             if child.to_tuple() not in visited:
 
                 visited.add(child.to_tuple())
@@ -199,21 +218,36 @@ def GreedyBFS(source, dest, enc, turfs):
 
 
 def A_Star(source, dest, enc, turfs):
+    '''
+    A-Star algorithm finds the most efficient path. It takes into account the total path 
+    cost and takes the path with minimum cost to the destination. Uses a formula f(n) = g(n) + h(n)
+    g(n) => the exact accumulated path cost from the start point to the current point or node
+    h(n) => estimated minimum cost from current point or node to the destination
+
+    The algorithm stores the points in the frontier and their g(n) value as a tuple in the frontier PQ 
+    and chooses the node with the minimum g(n) value aka cost when deciding which point to pop next
+    from the frontier and subsequently exploring
+    '''
     frontier = PriorityQueue()
     optimal_costs = {}
     start_cost = 0.0
     node_expansions = 0
     path_cost = 0.0
 
+    # initialize the frontier
     frontier.push( ([source], start_cost), (start_cost + heuristic(source, dest)) )
     optimal_costs[source.to_tuple()] = 0.0
 
+
     while frontier:
+        # the frontier takes tuple input
         (path, cost) = frontier.pop()
         node_expansions += 1
 
+        # current position is the end of the current path
         current = path[-1]
 
+        # if current point is the destination
         if current == dest:
             for i in range(1, len(path)):
                 path_cost += ActionCost(path[i], turfs)
@@ -221,13 +255,14 @@ def A_Star(source, dest, enc, turfs):
             Summarize('A-Star', path_cost, node_expansions)
             return path
         
+        # for each child in the current point
         for child in Expand(current, enc):
-            coord = child.to_tuple()
-            next_price = ActionCost(child, turfs)
-            new_cost = cost + next_price
+            coord = child.to_tuple() # get position of current possible move
+            next_price = ActionCost(child, turfs) # compute the action cost of moving to this point
+            new_cost = cost + next_price # compute total price of moving to the current child point from the start; g(n)
 
             if coord not in optimal_costs or new_cost < optimal_costs[coord]:
                 optimal_costs[coord] = new_cost
                 new_path = path + [child]
-                f_val = new_cost + heuristic(child, dest)
+                f_val = new_cost + heuristic(child, dest) # g(n) + h(n)
                 frontier.push( (new_path, new_cost), f_val )
